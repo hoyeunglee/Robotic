@@ -1,0 +1,111 @@
+p1 := vector([a*cos(q1), a*sin(q1)]);
+P := evalm(p1 + b*vector([cos(q1+q2), sin(q1+q2)]));
+Pe := map(expand, P);
+A := {cos(q1) = c1, sin(q1) =s1, cos(q2)=c2, sin(q2)=s2};
+P := subs(A, op(Pe));
+F1 := [x - P[1], y - P[2], s1^2+c1^2-1, s2^2+c2^2-1 ];
+F2 := subs({a=1, b=1}, F1);
+with(Groebner):
+g1 := Basis(F2, plex(c2, s2, c1, s1, y, x));
+g1 := [-4*x^2+x^4+2*x^2*y^2+y^4-4*y*x^2*s1-4*y^3*s1+4*s1^2*x^2+4*s1^2*y^2, 2*y*s1+2*x*c1-x^2-y^2, 4*x-x^3-y^2*x+2*y*x*s1-2*y^2*c1-4*s1^2*x+4*y*s1*c1, s1^2+c1^2-1, x*s1-y*c1+s2, -y^2+2-x^2+2*c2];
+map(indets, g1);
+[{s1, x, y}, {c1, s1, x, y}, {c1, s1, x, y}, {c1, s1}, {c1, s1, s2, x, y}, {c2, x, y}]
+factor(g1);
+
+g2 := Basis(F2, plex(c2, s2, c1, s1));
+g2 := [-4*x^2+x^4+2*x^2*y^2+y^4+(4*y^2+4*x^2)*s1^2+(-4*x^2*y-4*y^3)*s1, 2*y*s1+2*x*c1-x^2-y^2, -y^3-x^2*y+2*x*s2+(2*y^2+2*x^2)*s1, -y^2+2-x^2+2*c2];
+LeadingTerm(g2[1], plex(c2, s2, c1, s1));
+LeadingTerm(g2[2], plex(c2, s2, c1, s1));
+LeadingTerm(g2[3], plex(c2, s2, c1, s1));
+LeadingTerm(g2[4], plex(c2, s2, c1, s1));
+
+zero dimenional mean every variables occur alone in leading term of element of gb
+
+p := sort(g2[1], s1);
+d := discrim(p, s1);
+d := -(16*(y^2+x^2))*x^2*(-4+x^2+y^2)
+
+x = 1, y = 0.5
+g2spec := subs({x=1, y=1/2}, [g2[1],g2[3]]);
+S1 := [solve(g2spec[1])];
+q1a := evalf(arcsin(S1[1]));
+q1b := evalf(arcsin(S1[2]));
+
+S2 := [solve(subs(s1=S1[1], g2spec[2])), solve(subs(s1=S1[2], g2spec[2])) ];
+q2a := evalf(arcsin(S2[1]));
+q2b := evalf(arcsin(S2[2]));
+
+q2a_pi := evalf(-q2a-Pi);
+q2b_pi := evalf(Pi-q2b);
+
+Pspec := subs({a=1, b=1}, op(Pe));
+evalf(subs({q1=q1a, q2=q2a}, op(Pspec)));
+evalf(subs({q1=q1a, q2=q2a_pi}, op(Pspec)));
+
+evalf(subs({q1=q1b, q2=q2b}, op(Pspec)));
+evalf(subs({q1=q1b, q2=q2b_pi}, op(Pspec)));
+
+g3 := Basis(F1, plex(c2, s2, c1, s1));
+map(indets, g3);
+
+[{a, b, s1, x, y}, {a, b, c1, s1, x, y}, {a, b, s1, s2, x, y}, {a, b, c2, x, y}]
+
+LeadingTerm(g3[1], plex(c2, s2, c1, s1));
+LeadingTerm(g3[2], plex(c2, s2, c1, s1));
+LeadingTerm(g3[3], plex(c2, s2, c1, s1));
+LeadingTerm(g3[4], plex(c2, s2, c1, s1));
+
+4*x^2*a^2+4*a^2*y^2, s1^2;
+2*a*x, c1;
+2*x*a*b, s2;
+2*a*b, c2;
+
+p := sort(g3[1], s1);
+d := discrim(p, s1);
+
+g3spec := subs({x=1, y=1/2}, [g3[1],g3[3]]);
+S1 := [solve(g3spec[1], s1)];
+S1 := [(1/4+(1/5)*a^2-(1/5)*b^2+(1/10)*sqrt(-25+40*a^2+40*b^2-16*a^4+32*b^2*a^2-16*b^4))/a, (1/4+(1/5)*a^2-(1/5)*b^2-(1/10)*sqrt(-25+40*a^2+40*b^2-16*a^4+32*b^2*a^2-16*b^4))/a];
+S2 := [solve(subs(s1=S1[1], g3spec[2]), s2), solve(subs(s1=S1[2], g3spec[2]), s2) ];
+S2 := [-(1/8)*sqrt(-25+40*a^2+40*b^2-16*a^4+32*b^2*a^2-16*b^4)/(a*b), (1/8)*sqrt(-25+40*a^2+40*b^2-16*a^4+32*b^2*a^2-16*b^4)/(a*b)];
+
+q1a := evalf(arcsin(S1[1]));
+q1b := evalf(arcsin(S1[2]));
+
+q2a := evalf(arcsin(S2[1]));
+q2b := evalf(arcsin(S2[2]));
+
+q1a := arcsin((.2500000000+.2000000000*a^2-.2000000000*b^2+.1000000000*sqrt(-25.+40.*a^2+40.*b^2-16.*a^4+32.*b^2*a^2-16.*b^4))/a);
+q1b := arcsin((.2500000000+.2000000000*a^2-.2000000000*b^2-.1000000000*sqrt(-25.+40.*a^2+40.*b^2-16.*a^4+32.*b^2*a^2-16.*b^4))/a);
+
+q2a := -1.*arcsin(.1250000000*sqrt(-25.+40.*a^2+40.*b^2-16.*a^4+32.*b^2*a^2-16.*b^4)/(a*b));
+q2b := arcsin(.1250000000*sqrt(-25.+40.*a^2+40.*b^2-16.*a^4+32.*b^2*a^2-16.*b^4)/(b*a));
+
+q2a := subs({a=1,b=1}, q2a);
+if q2a < 0 then
+ q2a_pi := evalf(eval(-q2a-Pi));
+else
+ q2a_pi := evalf(eval(Pi-q2a));
+end if:
+q2a_pi;
+
+q2b := subs({a=1,b=1}, q2b);
+if q2b < 0 then
+ q2b_pi := evalf(eval(-q2b-Pi));
+else
+ q2b_pi := evalf(eval(Pi-q2b));
+end if:
+q2b_pi;
+
+p1 := vector([a*cos(q1), a*sin(q1)]);
+P := evalm(p1 + b*vector([cos(q1+q2), sin(q1+q2)]));
+Pe := map(expand, P);
+#Pspec := subs({a=1, b=1}, op(Pe));
+q1a := eval(subs({a=1,b=1}, q1a));
+q1b := eval(subs({a=1,b=1}, q1b));
+
+evalf(eval(subs({a=1, b=1, q1=q1a, q2=q2a}, op(Pe)))); # wrong angle
+evalf(eval(subs({a=1, b=1, q1=q1a, q2=q2a_pi}, op(Pe))));
+
+evalf(subs({a=1, b=1, q1=q1b, q2=q2b}, op(Pspec))); # wrong angle
+evalf(subs({a=1, b=1, q1=q1b, q2=q2b_pi}, op(Pspec)));
